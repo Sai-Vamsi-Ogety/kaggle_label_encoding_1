@@ -25,7 +25,7 @@ if __name__ == "__main__":
     df_test = pd.read_csv(TEST_DATA)
     train_df = df[df.kfold.isin(FOLD_MAPPPING.get(FOLD))].reset_index(drop=True)
     valid_df = df[df.kfold==FOLD].reset_index(drop=True)
-    
+
 
     ytrain = train_df.target.values
     yvalid = valid_df.target.values
@@ -64,7 +64,7 @@ if __name__ == "__main__":
     preds = clf.predict_proba(valid_df)[:, 1]
     print(metrics.roc_auc_score(yvalid, preds))
 
-    # joblib.dump(label_encoders, f"models/{MODEL}_{FOLD}_label_encoder.pkl")
-    # joblib.dump(one_hot_encoders, f"models/{MODEL}_{FOLD}_label_encoder.pkl")
-    # joblib.dump(clf, f"models/{MODEL}_{FOLD}.pkl")
-    # joblib.dump(train_df.columns, f"models/{MODEL}_{FOLD}_columns.pkl")
+    joblib.dump(label_encoders, f"models/{MODEL}_{FOLD}_label_encoder.pkl")
+    joblib.dump(one_hot_encoders, f"models/{MODEL}_{FOLD}_label_encoder.pkl")
+    joblib.dump(clf, f"models/{MODEL}_{FOLD}.pkl")
+    joblib.dump(train_df.columns, f"models/{MODEL}_{FOLD}_columns.pkl")
