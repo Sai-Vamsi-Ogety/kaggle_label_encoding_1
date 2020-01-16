@@ -33,14 +33,29 @@ if __name__ == "__main__":
     valid_df = valid_df.drop(["id", "target", "kfold"], axis=1)
 
     valid_df = valid_df[train_df.columns]
-
-    label_encoders = {}
-    for c in train_df.columns:
-        lbl = preprocessing.LabelEncoder()
-        lbl.fit(train_df[c].values.tolist() + valid_df[c].values.tolist() + df_test[c].values.tolist())
-        train_df.loc[:, c] = lbl.transform(train_df[c].values.tolist())
-        valid_df.loc[:, c] = lbl.transform(valid_df[c].values.tolist())
-        label_encoders[c] = lbl
+    #######################
+    #label_encoding strategy
+    #label_encoders = {}
+    
+    # for c in train_df.columns:
+    #     lbl = preprocessing.LabelEncoder()
+        
+    #     lbl.fit(train_df[c].values.tolist() + valid_df[c].values.tolist() + df_test[c].values.tolist())
+        
+    #     train_df.loc[:, c] = lbl.transform(train_df[c].values.tolist())
+        
+    #     valid_df.loc[:, c] = lbl.transform(valid_df[c].values.tolist())
+        
+    #     label_encoders[c] = lbl
+    ###########################
+    #one_hot_encoding_strategy
+    one = preprocessing.OneHotEncoder()
+    one.fit(train_df)
+    train_df=one.transform(train_df)
+    one = preprocessing.OneHotEncoder()
+    one.fit(valid_df)
+    valid_df=one.transform(valid_df)
+    
     
     # data is ready to train
     clf = dispatcher.MODELS[MODEL]
@@ -48,6 +63,7 @@ if __name__ == "__main__":
     preds = clf.predict_proba(valid_df)[:, 1]
     print(metrics.roc_auc_score(yvalid, preds))
 
-    joblib.dump(label_encoders, f"models/{MODEL}_{FOLD}_label_encoder.pkl")
-    joblib.dump(clf, f"models/{MODEL}_{FOLD}.pkl")
-    joblib.dump(train_df.columns, f"models/{MODEL}_{FOLD}_columns.pkl")
+    # joblib.dump(label_encoders, f"models/{MODEL}_{FOLD}_label_encoder.pkl")
+    # joblib.dump(one_hot_encoders, f"models/{MODEL}_{FOLD}_label_encoder.pkl")
+    # joblib.dump(clf, f"models/{MODEL}_{FOLD}.pkl")
+    # joblib.dump(train_df.columns, f"models/{MODEL}_{FOLD}_columns.pkl")
