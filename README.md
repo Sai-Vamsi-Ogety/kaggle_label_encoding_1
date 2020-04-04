@@ -1,4 +1,33 @@
-```
+### INTRODUCTION
+
+- Data can be present in different ways.
+- Types of data variables present in this data:
+    - **Binary data** : A binary variable a variable that has only 2 values..ie 0/1
+    - **Categorical data** : A categorical variable is a variable that can take some limited number of values.for example,day of the week.It can be one of 1,2,3,4,5,6,7 only.
+    - **Ordinal data** : An ordinal variable is a categorical variable that has some order associated with it.for example,the ratings that are given to a movie by a user.
+    - **Nominal data** : Nominal value is a variable that has no numerical importance,such as occupation,person name etc..
+    - **Timeseries data** : Time series data has a temporal value attached to it, so this would be something like a date or a time stamp that you can look for trends in time.
+![Label Encoding](https://techmintz.com/wp-content/uploads/2019/12/0*emSbyTsSeHaeFUKc-780x520.jpeg)
+--- 
+### Why do we need Label Encoding ?
+
+- For example, a decision tree can be learned directly from categorical data with no data transform required (this depends on the specific implementation).
+
+- Many machine learning algorithms cannot operate on label data directly. They require all input variables and output variables to be numeric.
+
+- In general, this is mostly a constraint of the efficient implementation of machine learning algorithms rather than hard limitations on the algorithms themselves.
+
+- This means that categorical data must be converted to a numerical form. If the categorical variable is an output variable, you may also want to convert predictions by the model back into a categorical form in order to present them or use them in some application.
+--- 
+- In this notebook we will try some of the most commonly used encoding techniques.
+
+
+### Downloading dataset from Kaggle using Kaggle API
+- First, get kaggle.json file from your kaggle account and upload to gdrive.
+- Second, Call Kaggle api to download the data 
+
+
+```python
 from google.colab import files
 uploaded  = files.upload()
 for fn in uploaded.keys():
@@ -24,7 +53,7 @@ for fn in uploaded.keys():
     
 
 
-```
+```python
 !kaggle competitions download -c cat-in-the-dat
 ```
 
@@ -41,7 +70,7 @@ for fn in uploaded.keys():
     
 
 
-```
+```python
 !unzip test.csv.zip
 !unzip train.csv.zip
 ```
@@ -52,8 +81,12 @@ for fn in uploaded.keys():
       inflating: train.csv               
     
 
+--- 
 
-```
+### Look at the data
+
+
+```python
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -65,13 +98,13 @@ from sklearn import base
 ```
 
 
-```
+```python
 df_train=pd.read_csv('/content/train.csv')
 df_test=pd.read_csv('/content/test.csv')
 ```
 
 
-```
+```python
 print('train data set has got {} rows and {} columns'.format(df_train.shape[0],df_train.shape[1]))
 print('test data set has got {} rows and {} columns'.format(df_test.shape[0],df_test.shape[1]))
 ```
@@ -81,7 +114,7 @@ print('test data set has got {} rows and {} columns'.format(df_test.shape[0],df_
     
 
 
-```
+```python
 df_train.head()
 ```
 
@@ -284,13 +317,13 @@ df_train.head()
 
 
 
-```
+```python
 X=df_train.drop(['target'],axis=1)
 y=df_train['target']
 ```
 
 
-```
+```python
 x=y.value_counts()
 plt.bar(x.index,x)
 plt.gca().set_xticks([0,1])
@@ -299,16 +332,8 @@ plt.show()
 ```
 
 
-![png](Label_Encoding_1_files/Label_Encoding_1_9_0.png)
+![png](Label_Encoding_1_files/Label_Encoding_1_13_0.png)
 
-
-### Types of data variables present in this data:
-
-- Binary data : A binary variable a variable that has only 2 values..ie 0/1
-- Categorical data : A categorical variable is a variable that can take some limited number of values.for example,day of the week.It can be one of 1,2,3,4,5,6,7 only.
-- Ordinal data : An ordinal variable is a categorical variable that has some order associated with it.for example,the ratings that are given to a movie by a user.
-- Nominal data : Nominal value is a variable that has no numerical importance,such as occupation,person name etc..
-- Timeseries data : Time series data has a temporal value attached to it, so this would be something like a date or a time stamp that you can look for trends in time.
 
 --- 
 
@@ -318,7 +343,7 @@ plt.show()
 - For example we will substitute 1 for Grandmaster,2 for master ,3 for expert etc.. For implementing this we will first import Labelencoder from sklearn module
 
 
-```
+```python
 %%time
 from sklearn.preprocessing import LabelEncoder
 
@@ -345,7 +370,7 @@ train.head(3)
 
 
 
-```
+```python
 print('train data set has got {} rows and {} columns'.format(train.shape[0],train.shape[1]))
 ```
 
@@ -356,7 +381,7 @@ print('train data set has got {} rows and {} columns'.format(train.shape[0],trai
 - We will use logistic regression to predict the target label on label encoded data
 
 
-```
+```python
 def logistic(X,y):
     X_train,X_test,y_train,y_test=train_test_split(X,y,random_state=42,test_size=0.2)
     lr=LogisticRegression()
@@ -366,7 +391,7 @@ def logistic(X,y):
 ```
 
 
-```
+```python
 logistic(train,y)
 ```
 
@@ -379,7 +404,7 @@ logistic(train,y)
 ![One Hot Encoding](https://miro.medium.com/max/878/1*WXpoiS7HXRC-uwJPYsy1Dg.png)
 
 
-```
+```python
 %%time
 from sklearn.preprocessing import OneHotEncoder
 
@@ -397,7 +422,7 @@ print('train data set has got {} rows and {} columns'.format(train.shape[0],trai
     
 
 
-```
+```python
 logistic(train,y)
 ```
 
@@ -422,7 +447,7 @@ logistic(train,y)
 
 
 
-```
+```python
 %%time
 from sklearn.feature_extraction import FeatureHasher
 
@@ -440,7 +465,7 @@ train=hashing.transform(X_train_hash.values)
     
 
 
-```
+```python
 print('train data set has got {} rows and {} columns'.format(train.shape[0],train.shape[1]))
 ```
 
@@ -448,7 +473,7 @@ print('train data set has got {} rows and {} columns'.format(train.shape[0],trai
     
 
 
-```
+```python
 logistic(train,y)
 ```
 
@@ -472,7 +497,7 @@ logistic(train,y)
 - This way if New York and New Jersey are both big cities, they will probably both appear many times in our dataset and the model will know that they are similar.
 
 
-```
+```python
 %%time
 
 X_train_stat=X.copy()
@@ -491,7 +516,7 @@ for c in X_train_stat.columns:
     
 
 
-```
+```python
 X_train_stat.head(3)
 
 ```
@@ -632,7 +657,7 @@ X_train_stat.head(3)
 
 
 
-```
+```python
 print('train data set has got {} rows and {} columns'.format(X_train_stat.shape[0],X_train_stat.shape[1]))
 ```
 
@@ -640,7 +665,7 @@ print('train data set has got {} rows and {} columns'.format(X_train_stat.shape[
     
 
 
-```
+```python
 logistic(X_train_stat,y)
 ```
 
@@ -666,7 +691,7 @@ logistic(X_train_stat,y)
 - A common method for encoding cyclical data is to transform the data into two dimensions using a sine and consine transformation.
 
 
-```
+```python
 %%time
 
 X_train_cyclic=X.copy()
@@ -686,7 +711,7 @@ X_train_cyclic[['day_sin','day_cos']].head(3)
 - Now we will use OnHotEncoder to encode other variables,then feed the data to our model.
 
 
-```
+```python
 one=OneHotEncoder()
 
 one.fit(X_train_cyclic)
@@ -699,7 +724,7 @@ print('train data set has got {} rows and {} columns'.format(train.shape[0],trai
     
 
 
-```
+```python
 logistic(train,y)
 ```
 
@@ -743,7 +768,7 @@ logistic(train,y)
 
 
 
-```
+```python
 %%time
 
 X_target=df_train.copy()
@@ -762,7 +787,7 @@ X_target.head(4)
     
 
 
-```
+```python
 logistic(X_target.drop('target',axis=1),y)
 ```
 
